@@ -26,6 +26,92 @@ if ('IntersectionObserver' in window) {
 const header = document.querySelector('.header');
 addEventListener('scroll', () => header.classList.toggle('is-scrolled', scrollY > 8), { passive: true });
 
+// Hakkımızda galerisi: kendiliğinden sağdan sola kayar, oklar, klavye ve kaydırmayla elle değişir
+const gallery = document.getElementById('galeri');
+const track = document.getElementById('galeriTrack');
+const slides = track.querySelectorAll('img');
+const count = document.getElementById('galeriCount');
+const bar = document.getElementById('galeriBar');
+const DELAY = 4500;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let current = 0;
+let timer = null;
+let hovered = false;
+let inView = false;
+
+let anim = null;
+
+const pad = (n) => String(n).padStart(2, '0');
+
+// Kaydırmayı kendimiz canlandırıyoruz; her tarayıcıda aynı hız ve yumuşaklık
+function slideTo(left) {
+  cancelAnimationFrame(anim);
+  const from = track.scrollLeft;
+  if (reduceMotion || Math.abs(left - from) < 1) { track.scrollLeft = left; return; }
+  const start = performance.now();
+  const dur = 650;
+  track.style.scrollSnapType = 'none';
+  const step = (now) => {
+    const t = Math.min((now - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    track.scrollLeft = from + (left - from) * ease;
+    if (t < 1) { anim = requestAnimationFrame(step); return; }
+    anim = null;
+    track.style.scrollSnapType = '';
+  };
+  anim = requestAnimationFrame(step);
+}
+
+function goTo(i, move = true) {
+  current = (i + slides.length) % slides.length;
+  if (move) slideTo(current * track.clientWidth);
+  count.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+  restart();
+}
+
+function restart() {
+  clearTimeout(timer);
+  bar.classList.remove('is-running');
+  const play = !reduceMotion && !hovered && inView && !document.hidden;
+  gallery.classList.toggle('is-paused', !play);
+  if (!play) return;
+  void bar.offsetWidth; // çubuk animasyonunu baştan başlat
+  bar.classList.add('is-running');
+  timer = setTimeout(() => goTo(current + 1), DELAY);
+}
+
+gallery.style.setProperty('--gallery-delay', DELAY + 'ms');
+document.getElementById('galeriPrev').addEventListener('click', () => goTo(current - 1));
+document.getElementById('galeriNext').addEventListener('click', () => goTo(current + 1));
+track.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
+});
+
+// Parmakla kaydırınca sayacı güncelle
+let scrollEnd;
+track.addEventListener('scroll', () => {
+  if (anim) return;
+  clearTimeout(scrollEnd);
+  scrollEnd = setTimeout(() => {
+    const i = Math.round(track.scrollLeft / track.clientWidth);
+    if (i !== current) goTo(i, false);
+  }, 120);
+}, { passive: true });
+track.addEventListener('pointerdown', () => { cancelAnimationFrame(anim); anim = null; track.style.scrollSnapType = ''; });
+
+// Fare üstündeyken, sekme gizliyken ya da galeri ekranda değilken dur
+gallery.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { hovered = true; restart(); } });
+gallery.addEventListener('pointerleave', () => { hovered = false; restart(); });
+document.addEventListener('visibilitychange', restart);
+addEventListener('resize', () => { track.scrollLeft = current * track.clientWidth; });
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; restart(); }, { threshold: 0.4 }).observe(gallery);
+} else {
+  inView = true;
+  restart();
+}
+
 // Açık / kapalı durumu (Antalya saatiyle). Pzt-Cmt 08:30-18:00, Pazar kapalı.
 const DAYS = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
 const OPEN = 8 * 60 + 30;
