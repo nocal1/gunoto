@@ -239,15 +239,15 @@ section[id] { scroll-margin-top: calc(var(--header-h) + var(--s-3)); }
   padding: var(--s-1) var(--s-2); border-radius: 4px; border-left: 3px solid var(--signal);
 }
 /* Galeri: yatay kayan fotoğraflar */
-.gallery { border-radius: var(--r); box-shadow: var(--sh-3); overflow: hidden; }
+.gallery { aspect-ratio: 4 / 5; border-radius: var(--r); box-shadow: var(--sh-3); overflow: hidden; }
 .gallery__track {
-  display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+  display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory;
   scrollbar-width: none; overscroll-behavior-x: contain; outline: none;
 }
 .gallery__track::-webkit-scrollbar { display: none; }
 .gallery__track:focus-visible { box-shadow: inset 0 0 0 3px var(--signal); }
 .about__photo .gallery__track img {
-  flex: 0 0 100%; width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
+  flex: 0 0 100%; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover;
   scroll-snap-align: start; border-radius: 0; box-shadow: none;
 }
 .gallery__ctrl {
