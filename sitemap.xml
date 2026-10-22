@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DEĞİŞTİR: alan adını gerçeğiyle değiştirin -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://www.gunoto.com.tr/</loc>
+    <lastmod>2026-10-22</lastmod>
+    <image:image><image:loc>https://www.gunoto.com.tr/img/dukkan-1440.jpg</image:loc></image:image>
+    <image:image><image:loc>https://www.gunoto.com.tr/img/usta-640.jpg</image:loc></image:image>
+  </url>
+</urlset>

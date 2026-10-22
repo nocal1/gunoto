@@ -1,0 +1,9 @@
+# ÖNİZLEME: işletme onaylayınca aşağıdaki iki satırı silip yorumdaki bloğu açın
+User-agent: *
+Disallow: /
+
+# User-agent: *
+# Allow: /
+# Disallow: /tesekkurler.html
+#
+# Sitemap: https://www.gunoto.com.tr/sitemap.xml

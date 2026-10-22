@@ -1,0 +1,26 @@
+# Bağımlılıklar
+node_modules/
+
+# Gizli bilgiler
+.env
+.env.*
+!.env.example
+*.pem
+.vercel_token
+.apify_token
+
+# Vercel / Netlify yerel klasörleri
+.vercel/
+.netlify/
+
+# İşletim sistemi ve editör
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# Günlükler
+*.log
+npm-debug.log*
