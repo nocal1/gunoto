@@ -1,0 +1,5 @@
+# Netlify ayarları: derleme yok, depo kökü olduğu gibi yayınlanır.
+# Başlıklar (noindex, önbellek) _headers dosyasında.
+[build]
+  publish = "."
+  command = ""
